@@ -13,7 +13,7 @@ const postLogin = async (req, res)=>{
              //create JWT token
             const token = jwt.sign(
                 {
-                    userId:user._id,
+                    user_id:user._id,
                     email:email
                 },
                 process.env.TOKEN_KEY,

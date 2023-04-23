@@ -5,7 +5,7 @@ const newConnectionHandler = async (socket, io) =>{
 
     serverStore.addNewConnectedUser({
         sockedId:socket.id,
-        userId:userDetails?.userId,
+        user_id:userDetails?.user_id,
     })
 }
 

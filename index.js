@@ -7,10 +7,14 @@ const userRoutes = require("./routes/userRoutes");
 const mongoose = require('mongoose');
 const socketServer = require('./socketServer')
 require('dotenv').config();
+const fileUpload = require('express-fileupload');
+
 
 const PORT = process.env.PORT || process.env.API_PORT;
 const HOSTNAME = '0.0.0.0'
 const app = express();
+app.use(fileUpload());
+app.use(express.static('public'));
 app.use(express.json());
 const corsOptions = {
   methods: ['GET', 'POST', 'PUT'],

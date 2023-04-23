@@ -4,8 +4,8 @@ const jwt = require("jsonwebtoken");
 
 const getUser = async (req, res)=>{
     try{
-        const userId = req?.user?.userId
-        const user = await User.findOne({ _id:userId});
+        const user_id = req?.user?.user_id
+        const user = await User.findOne({ _id:user_id});
         // return res.status(200).json({error:"Error occured, Please try again"});
         if(user){
             return res.status(200).json({

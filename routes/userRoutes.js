@@ -4,5 +4,6 @@ const auth = require("../middleware/auth")
 const userControllers = require("./../controllers/user/userControllers")
 
 router.get("/get",  auth, userControllers.controllers.getUser);
+router.post("/upload",  auth, userControllers.controllers.uploadProfile);
 
 module.exports = router;

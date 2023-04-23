@@ -1,6 +1,6 @@
 const User = require("../../models/user");
 
-const getUser = async (req, res)=>{
+const updateUser = async (req, res)=>{
     try{
         const user_id = req?.user?.user_id
         const user = await User.findOne({ _id:user_id});
@@ -8,7 +8,7 @@ const getUser = async (req, res)=>{
         if(user){
             return res.status(200).json({
                 userDetails:{
-                    user_id:user?._id,
+                    _id:user?._id,
                     email:user.email,
                     username:user.username
                 }
@@ -20,4 +20,4 @@ const getUser = async (req, res)=>{
         return res.status(500).json({error:"Error occured, Please try again"});
     }
 }
-module.exports = getUser;
+module.exports = updateUser;

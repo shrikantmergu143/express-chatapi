@@ -1,7 +1,7 @@
 const connectUsers = new Map();
 
-const addNewConnectedUser = ({ socketId, userId}) =>{
-     connectUsers.set(socketId, {userId});
+const addNewConnectedUser = ({ socketId, user_id}) =>{
+     connectUsers.set(socketId, {user_id});
 }
 
 module.exports = {
