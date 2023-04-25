@@ -8,7 +8,7 @@ const updateUser = async (req, res)=>{
         if(user){
             return res.status(200).json({
                 userDetails:{
-                    _id:user?._id,
+                    user_id:user?._id,
                     email:user.email,
                     username:user.username
                 }
