@@ -1,30 +1,44 @@
-const express = require('express');
+const express = require("express");
+const http = require("http");
+const cors = require("cors");
+// const { MongoClient, ServerApiVersion } = require('mongodb');
+const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
+const mongoose = require('mongoose');
+const socketServer = require('./socketServer')
+require('dotenv').config();
+const fileUpload = require('express-fileupload');
 const app = express();
-const http = require('http').createServer(app);
-const io = require('socket.io')(http);
 
 // Serve static files
 app.use(express.static(__dirname + '/public'));
 
-// Set up WebSocket connection
-io.on('connection', (socket) => {
-  console.log('A user connected');
 
-  // Listen for custom event 'message' from client
-  socket.on('message', (data) => {
-    console.log('Message received:', data);
-    
-    // Broadcast the message to all connected clients
-    io.emit('message', data);
-  });
+const PORT = process.env.PORT || process.env.API_PORT;
+const HOSTNAME = '0.0.0.0'
+app.use(fileUpload());
+app.use(express.json());
+const corsOptions = {
+  methods: ['GET', 'POST', 'PUT'],
+  origin:"*",
+};
+app.use(cors(corsOptions));
+// app.use("/", (req, res) => {
+//   res.json({ message: "Hello From Express App" });
+// });
+//Register
+app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
 
-  // Listen for disconnect event
-  socket.on('disconnect', () => {
-    console.log('A user disconnected');
-  });
+const server = http.createServer(app, (req, res)=>{
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+  res.end();
 });
+socketServer.registerSocketServer(server);
 
-// Start Express.js server
-http.listen(process.env.PORT || 3000, () => {
-  console.log('Server is running on port 3000');
-});
+mongoose.set('strictQuery', false);
+mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true }).then(() => {
+    server.listen(PORT, HOSTNAME, ()=>{
+        console.log("Serverport", PORT);
+    });
+}).catch(error => console.error(error));
