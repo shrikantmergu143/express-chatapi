@@ -9,7 +9,7 @@ const socketServer = require('./socketServer')
 require('dotenv').config();
 const fileUpload = require('express-fileupload');
 const app = express();
-
+const fs = require('fs');
 // Serve static files
 app.use(express.static(__dirname + '/public'));
 
@@ -29,6 +29,22 @@ app.use(cors(corsOptions));
 //Register
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
+// Define a route to serve the image file
+function fileExists(filePath) {
+  try {
+    fs.accessSync(filePath, fs.constants.F_OK);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+app.get('/storage/*', (req, res) => {
+  if (fileExists(__dirname + req?.url)){
+    res.sendFile(__dirname + req?.url);
+  }else{
+    res.send("404 page not found");
+  }
+});
 
 const server = http.createServer(app, (req, res)=>{
   res.writeHead(200, { 'Content-Type': 'application/json' });

@@ -4,6 +4,7 @@ const updateUser = async (req, res)=>{
     try{
         const user_id = req?.user?.user_id
         const user = await User.findOne({ _id:user_id});
+        console.log("req.body", req.body)
         // return res.status(200).json({error:"Error occured, Please try again"});
         if(user){
             return res.status(200).json({

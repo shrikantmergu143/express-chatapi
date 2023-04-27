@@ -1,6 +1,9 @@
 const User = require("../models/user");
+const Storage = require("../models/storage");
 const fs = require('fs');
 const path = require('path');
+const uuid = require("uuid");
+const storeHandler = require("./StorageHandler")
 // Get the current date and time
 const currentDate = new Date();
 const year = currentDate.getFullYear();
@@ -9,60 +12,33 @@ const date = currentDate.getDate();
 const hours = currentDate.getHours();
 const minutes = currentDate.getMinutes();
 const seconds = currentDate.getSeconds();
-
 const currentDateTime = new Date().toLocaleString().replace(/[\s:\/,]/g, '');
-
+const updateDocument = async (id, file_url) => {
+  try {
+      const updatedResult =
+          await User.findByIdAndUpdate(
+              { _id: id },
+              {
+                profile_url:file_url
+              }
+          );
+      return updatedResult;
+  } catch (error) {
+      return false
+  }
+};
 const uploadProfile = async (req, res)=>{
-    try{
-      // Log the files to the console
+  const response =  await storeHandler?.folderHandler(req, res, "profile");
+    if(response?.status === 200){
       const user_id = req?.user?.user_id
-      const user = await User.findById(user_id);
-      if(user){
-        const { file } = req.files;
-        if (!file) return res.sendStatus(400);
-    
-        // If does not have image mime type prevent from uploading
-        if (/^file/.test(file.mimetype)) return res.sendStatus(400);
-        const fs = require('fs');
-    
-        // Specify the folder path you want to create
-        const folderPath = `/profile/${user?._id}/`; // Example folder path
-        const newImageName = `_${year}-${month}-${date}_${hours}-${minutes}-${seconds}`;
-        // Use fs.mkdir to create the folder
-        fs.mkdir(__dirname + folderPath, { recursive: true }, (err) => {
-          if (err) {
-            console.error(`Failed to create folder: ${err}`);
-          } else {
-            console.log(`Folder created successfully`);
-          }
-        });
-        const fileExtension = file.name.split('.').pop();
-        const fileName = file.name.split('.')[0];
-        const image_path = folderPath + `${fileName}${newImageName}.${fileExtension}`;
-        console.log("image_path", image_path)
-        const original = "storage" + image_path;
-        file.mv(__dirname + image_path);
-        const respon = await User.findByIdAndUpdate(user_id, {profile_url:original}, null);
-        if(respon !== false ){
-          return res.status(200).json({
-            file:original, 
-            userDetails:{
-              user_id:respon?._id,
-              email:respon?.email,
-              username:respon?.username,
-              profile_url:original,
-              first_name:respon?.first_name,
-              last_name:respon?.last_name,
-          }});
-        }else{
-          return res.status(400).json({status:"false"});
-        }
-        
+      const respon = await updateDocument(user_id, response?.data?.file_url)// await User.findByIdAndUpdate({_id:user_id}, {profile_url:response?.data?.file_url}).then(res=>res);
+      if(respon){
+        return res.status(200).json({data:{profile_url:response?.data?.file_url}});
       }else{
-          return res.status(403).json({error:"invalid token"});
+        return res.status(400).json({error:"Update profile failed"});
       }
-    }catch(err){
-        return res.status(500).json({error:"Error occured, Please try again"});
+    }else{
+      return res.status(response?.status).json(response);
     }
 }
 module.exports = uploadProfile;
