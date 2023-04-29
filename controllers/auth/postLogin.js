@@ -1,4 +1,5 @@
 const User = require("../../models/user");
+const userPayload = require("../userPayload");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -21,11 +22,11 @@ const postLogin = async (req, res)=>{
                     expiresIn:"365d"
                 }
             );
+            const payload = userPayload(user);
             return res.status(200).json({
                 userDetails:{
-                    email:user.email,
+                    ...payload,
                     token:token,
-                    username:user.username
                 }
             });
         }

@@ -15,16 +15,16 @@ const seconds = currentDate.getSeconds();
 const currentDateTime = new Date().toLocaleString().replace(/[\s:\/,]/g, '');
 const updateDocument = async (id, file_url) => {
   try {
-      const updatedResult =
-          await User.findByIdAndUpdate(
-              { _id: id },
-              {
-                profile_url:file_url
-              }
-          );
-      return updatedResult;
+    const updatedResult =
+        await User.findByIdAndUpdate(
+            { _id: id },
+            {
+              profile_url:file_url
+            }
+        );
+    return updatedResult;
   } catch (error) {
-      return false
+    return false
   }
 };
 const uploadProfile = async (req, res)=>{
