@@ -6,4 +6,10 @@ module.exports = {
     add_projects:"/add-projects",
     add_education:"/add-education",
     GetUser:"/get",
+    api_auth:"/api/auth",
+    api_user:"/api/user",
+    api_list:"/api/list",
+    storage:"/storage/*",
+    register:"/register",
+    login:"/login",
 }

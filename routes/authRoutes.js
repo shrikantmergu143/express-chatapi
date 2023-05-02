@@ -5,6 +5,7 @@ const auth = require("../middleware/auth")
 const Joi = require("joi");
 // const { validate } = require("uuid");
 const validator = require("express-joi-validation").createValidator({});
+const App_url = require("../constant/App_url");
 
 const registerSchema = Joi.object({
     username:Joi.string().min(3).max(100).required(),
@@ -16,8 +17,8 @@ const loginSchema = Joi.object({
     email:Joi.string().email().required(),
     password:Joi.string().min(6).max(100).required(),
 })
-router.post("/register", validator.body(registerSchema), authControllers.controllers.postRegister);
-router.post("/login",  validator.body(loginSchema), authControllers.controllers.postLogin);
+router.post(App_url.register, validator.body(registerSchema), authControllers.controllers.postRegister);
+router.post(App_url.login,  validator.body(loginSchema), authControllers.controllers.postLogin);
 // router.post("/login",  validator.body(loginSchema), authControllers.controllers.postLogin);
 // 
 router.get("/test",  auth, (req, res)=>{
