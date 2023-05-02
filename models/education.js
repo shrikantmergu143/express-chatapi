@@ -8,7 +8,6 @@ const userSchema = new mongoose.Schema({
     college_type:{type:String}, 
     state:{type:String}, 
     district:{type:String}, 
-    university:{type:String},
     education_name:{type:String},
     education_type:{type:String},
     education_degree:{type:String},
