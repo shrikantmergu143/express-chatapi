@@ -12,4 +12,7 @@ module.exports = {
     storage:"/storage/*",
     register:"/register",
     login:"/login",
+    message:"/api/message",
+    api_message:"/api/message",
+    send_message:"/send"
 }

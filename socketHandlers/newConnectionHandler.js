@@ -1,10 +1,10 @@
 const serverStore = require("./../serverStore");
-
-const newConnectionHandler = async (socket, io) =>{
-    const userDetails = socket.user;
-
+const uuid = require("./../controllers/uuid")
+const newConnectionHandler = async (socket) =>{
+    const userDetails = socket;
+    const id = uuid?.getId();
     serverStore.addNewConnectedUser({
-        sockedId:socket.id,
+        socketId:id,
         user_id:userDetails?.user_id,
     })
 }

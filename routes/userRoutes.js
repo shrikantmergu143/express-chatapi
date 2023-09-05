@@ -5,6 +5,7 @@ const Joi = require("joi");
 // const { validate } = require("uuid");
 const validator = require("express-joi-validation").createValidator({});
 const userControllers = require("./../controllers/user/userControllers");
+const educationControllers = require("./../controllers/education/educationControllers")
 const App_url = require("../constant/App_url");
 
 const experienceSchema = Joi.object({
@@ -50,6 +51,6 @@ router.post(App_url.upload,  auth, userControllers.controllers.uploadProfile);
 router.post(App_url.update_user,  auth, userControllers.controllers.updateUser);
 router.post(App_url.add_experience,  validator.body(experienceSchema), auth, userControllers.controllers.updateUser);
 router.post(App_url.add_projects,  validator.body(projectsSchema), auth, userControllers.controllers.updateUser);
-router.post(App_url.add_education,  validator.body(educationSchema), auth, userControllers.controllers.updateUser);
+router.post(App_url.add_education,  validator.body(educationSchema), auth, educationControllers.controllers.addEducation);
 
 module.exports = router;
