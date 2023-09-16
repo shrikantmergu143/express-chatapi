@@ -1,5 +1,6 @@
 const authRoutes = require("./../routes/authRoutes")
 const userRoutes = require("./../routes/userRoutes");
+const usersRoutes = require("./../routes/usersRoutes");
 const listRoutes = require("./../routes/listRoutes");
 const messageRoutes = require("./../routes/messageRoutes");
 const fs = require('fs');
@@ -19,6 +20,7 @@ const appRouter = (app)=>{
     app.use(App_url.api_user, userRoutes);
     app.use(App_url.api_list, listRoutes);
     app.use(App_url.api_message, messageRoutes);
+    app.use(App_url.api_friend, usersRoutes);
     app.get(App_url.storage, (req, res) => {
         if (fileExists(__dirname + req?.url)){
           res.sendFile(__dirname + req?.url);

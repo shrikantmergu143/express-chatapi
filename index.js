@@ -4,6 +4,7 @@ const cors = require("cors");
 // const { MongoClient, ServerApiVersion } = require('mongodb');
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
+const usersRoutes = require("./routes/usersRoutes");
 const mongoose = require('mongoose');
 const socketServer = require('./socketServer')
 require('dotenv').config();
@@ -27,6 +28,7 @@ app.use(cors(corsOptions));
 //Register
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api", usersRoutes);
 
 const server = http.createServer(app, (req, res)=>{
   res.writeHead(200, { 'Content-Type': 'application/json' });

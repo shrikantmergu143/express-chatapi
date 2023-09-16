@@ -1,5 +1,6 @@
 module.exports = {
     get_user:"/get",
+    get_users:"/users",
     upload:"/upload",
     update_user:"/update",
     add_experience:"/add-experience",
@@ -14,5 +15,6 @@ module.exports = {
     login:"/login",
     message:"/api/message",
     api_message:"/api/message",
+    api_friend:"/api/friend",
     send_message:"/send"
 }
