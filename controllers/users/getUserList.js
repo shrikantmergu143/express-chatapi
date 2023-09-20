@@ -9,7 +9,7 @@ const getUsersList = async (req, res)=>{
         if(user){
             const payload = await User.find({ _id: { $ne: user_id } });
             return res.status(200).json({
-                userDetails:payload
+                data:payload
             });
         }
         return res.status(403).json({error:"Token expired"});
