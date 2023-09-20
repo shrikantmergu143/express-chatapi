@@ -18,4 +18,4 @@ const getUsersList = async (req, res)=>{
         return res.status(500).json({error:"Error occured, Please try again"});
     }
 } 
-module.exports = getUsersList;
+module.exports = getUsersList; 
