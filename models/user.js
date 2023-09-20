@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     pincode:{type:String},
     created_at: { type: String, required: true, default:new Date().toISOString() },
     updated_at: { type: String, required: true, default:new Date().toISOString() },
-    resume: { type: String, required: true, default:"" },
+    resume: { type: String, default:"" },
     user_type: { type: String, required: true, default:"user" },
     is_admin: { type: Boolean, required: true, default:false },
     status: { type: String, required: true, default:"active" },

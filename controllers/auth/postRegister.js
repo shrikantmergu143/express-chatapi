@@ -21,7 +21,7 @@ const postRegister = async (req, res)=>{
         });
 
         //create JWT token
-        const token = jwt.sign(
+        const token = await jwt.sign(
             {
                 user_id:user._id,
                 email:email
@@ -40,7 +40,7 @@ const postRegister = async (req, res)=>{
             }
         });
     }catch(err){
-        return res.status(500).json({error:"Error occured, Please try again"});
+        return res.status(500).json({error:"Error occured, Please try again", err:err});
     }
 }
 module.exports = postRegister;
