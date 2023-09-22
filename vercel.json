@@ -8,7 +8,9 @@
   ],
   "routes": [
     {
-      "/api/fileUpload": "api/fileUpload.js",
+      "/api/upload": "api/upload.js"
+    },
+    {
       "src": "/(.*)",
       "dest": "/app.js"
     }
