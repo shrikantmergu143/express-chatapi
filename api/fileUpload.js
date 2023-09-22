@@ -1,23 +1,20 @@
-const { parse } = require('url');
-const { createReadStream, createWriteStream } = require('fs');
-const { join } = require('path');
-const { pipeline } = require('stream');
-const { promisify } = require('util');
-const pipelineAsync = promisify(pipeline);
+// api/fileUpload.js
+
+import { createWriteStream } from 'fs';
+import { join } from 'path';
+import { pipeline } from 'stream/promises';
 
 export default async (req, res) => {
   if (req.method === 'POST') {
     try {
-      // Parse the request URL
-      const { pathname } = parse(req.url);
       // Define the file path where the uploaded file will be stored
-      const filePath = join(process.cwd(), 'uploads', pathname.replace('/api/upload', ''));
+      const filePath = join(process.cwd(), 'uploads', 'uploaded-file.txt'); // Update with your desired file path and name
 
       // Create a write stream to save the uploaded file
       const writeStream = createWriteStream(filePath);
 
       // Pipe the request stream to the write stream
-      await pipelineAsync(req, writeStream);
+      await pipeline(req, writeStream);
 
       // Send a success response
       res.statusCode = 200;
