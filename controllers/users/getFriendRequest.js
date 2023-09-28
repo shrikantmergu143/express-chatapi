@@ -19,7 +19,7 @@ const getFriendRequest = async (req, res) => {
     const friendRequests = await FriendRequest.find(query);
 
     if (!friendRequests || friendRequests.length === 0) {
-      return res.status(404).json({ message: 'No friend requests found' });
+      return res.status(400).json({ message: 'No friend requests found' });
     }
 
     return res.status(200).json({ friendRequests });
