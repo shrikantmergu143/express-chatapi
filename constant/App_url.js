@@ -1,5 +1,6 @@
 module.exports = {
     get_user:"/get",
+    send_request:"/send_request",
     get_users:"/users",
     upload:"/upload",
     update_user:"/update",
