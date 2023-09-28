@@ -13,5 +13,6 @@ const projectsSchema = Joi.object({
 })
 router.get(App_url.get_users,  auth, usersControllers.controllers.getUserList);
 router.post(App_url.send_request,  validator.body(projectsSchema), auth, usersControllers.controllers.sendFriendRequest);
+router.get(App_url.friend_request,  auth, usersControllers.controllers.getFriendRequest);
 
 module.exports = router;
