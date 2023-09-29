@@ -1,5 +1,9 @@
 module.exports = {
     get_user:"/get",
+    send_request:"/send_request",
+    ReceivedFriendRequests:"/received-friend-requests",
+    FriendRequestUpdate:"/friend-request/:id/status",
+    friend_request:"/friend-request",
     get_users:"/users",
     upload:"/upload",
     update_user:"/update",
