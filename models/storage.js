@@ -9,8 +9,8 @@ const userSchema = new mongoose.Schema({
     file_path:{type:String},
     file_size:{type:Number},
     file_type:{type:String},
-    created_at: { type: String, required: true, default: new Date().toISOString() },
-    updated_at: { type: String, required: true, default: new Date().toISOString() }
+    created_at: { type: Date, required: true, default: Date.now },
+    updated_at: { type: Date, required: true, default: Date.now },
 });
 
 module.exports = mongoose.model("storage", userSchema)
