@@ -4,6 +4,7 @@ const getFriendRequest = require("./getFriendRequest");
 const getReceivedFriendRequests = require("./getReceivedFriendRequests");
 const updateFriendRequests = require("./updateFriendRequests");
 const getAcceptedFriendDetails = require("./getAcceptedFriendDetails");
+const getFriendDetailsById = require("./getFriendDetailsById");
 
 
 exports.controllers = {
@@ -13,4 +14,5 @@ exports.controllers = {
     getReceivedFriendRequests,
     updateFriendRequests,
     getAcceptedFriendDetails,
+    getFriendDetailsById,
 }

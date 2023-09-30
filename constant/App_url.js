@@ -22,5 +22,6 @@ module.exports = {
     api_message:"/api/message",
     api_friend:"/api/friend",
     send_message:"/:friend_id/send",
-    get_message:"/:friend_id/get",
+    get_message:"/:friend_id/get_message",
+    get_details:"/:friend_id/get_details",
 }

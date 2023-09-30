@@ -29,7 +29,8 @@ const getMessages = async (req, res) => {
         if (!messages || messages.length === 0) {
             return res.status(400).json({ message: 'No messages found for the given friend_id' });
         }
-        res.status(200).json({ data: messages, totalMessageCount });
+        const SortMessage = messages.reverse();
+        res.status(200).json({ data: SortMessage, totalMessageCount });
     } catch (err) {
         console.error("Error:", err);
         return res.status(500).json({ error: "An error occurred. Please try again." });
