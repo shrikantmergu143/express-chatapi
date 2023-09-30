@@ -1,5 +1,6 @@
 const { db } = require("../../models/user");
 const User = require("../../models/user");
+const usersPayload = require("../usersPayload");
 
 const getUsersList = async (req, res)=>{
     try{
@@ -8,15 +9,10 @@ const getUsersList = async (req, res)=>{
         // return res.status(200).json({error:"Error occured, Please try again"});
         if(user){
             const payload = await User.find({ _id: { $ne: user_id } });
-            const response = payload?.map((item)=>({
-                user_id:item?._id,
-                id:item?._id,
-                email:item?.email,
-                username:item?.username,
-                profile_url:item?.profile_url?item?.profile_url:null,
-                first_name:item?.first_name?item?.first_name:null,
-                username:item?.last_name?item?.last_name:null,
-            }))
+            const response = payload?.map((item)=>{
+                const Data =  usersPayload(item);
+                return Data;
+            })
             return res.status(200).json({
                 data:response
             });
