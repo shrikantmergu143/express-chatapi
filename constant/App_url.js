@@ -1,6 +1,7 @@
 module.exports = {
     get_user:"/get",
     send_request:"/send_request",
+    acceptedFriends:"/accepted-friends",
     ReceivedFriendRequests:"/received-friend-requests",
     FriendRequestUpdate:"/friend-request/:id/status",
     friend_request:"/friend-request",
@@ -20,5 +21,6 @@ module.exports = {
     message:"/api/message",
     api_message:"/api/message",
     api_friend:"/api/friend",
-    send_message:"/send"
+    send_message:"/:friend_id/send",
+    get_message:"/:friend_id/get",
 }

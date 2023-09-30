@@ -22,7 +22,7 @@ const getFriendRequest = async (req, res) => {
       return res.status(400).json({ message: 'No friend requests found' });
     }
 
-    return res.status(200).json({ friendRequests });
+    return res.status(200).json({ data:friendRequests });
   } catch (error) {
     console.error('Error fetching friend requests:', error);
     return res.status(500).json({ error: 'Error fetching friend requests' });
