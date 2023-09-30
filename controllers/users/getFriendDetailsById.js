@@ -17,6 +17,7 @@ const getFriendDetailsById = async (req, res) => {
     const userDetails = await User.findOne({
       $or: [{ email: friendRequest.email_to }, { email: friendRequest.email_from }]
     });
+
     const payload = {
       ...friendRequest?._doc,
       userDetails:usersPayload(userDetails),
