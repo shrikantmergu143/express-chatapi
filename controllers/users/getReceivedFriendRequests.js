@@ -3,7 +3,7 @@ const FriendRequest = require('../../models/friendRequest');
 const getReceivedFriendRequests = async (req, res) => {
   try {
     const userEmail = req?.user?.email;  // Assuming you can get the user's email from the request
-    const { status } = req.query;
+    const status = req.query.status || req.body.status;
 
     const query = {
       email_to: userEmail  // The user is the recipient of the friend request
