@@ -12,8 +12,8 @@ const userSchema = new mongoose.Schema({
     description:{type:String},
     skills:{type:String},
     company_current:{type:Boolean},
-    created_at: { type: String, required: true, default: new Date().toISOString() },
-    updated_at: { type: String, required: true, default: new Date().toISOString() },
+    created_at: { type: Date, required: true, default: Date.now },
+    updated_at: { type: Date, required: true, default: Date.now },
 });
 
 module.exports = mongoose.model("education", userSchema)

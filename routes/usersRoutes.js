@@ -16,5 +16,7 @@ router.post(App_url.send_request,  validator.body(projectsSchema), auth, usersCo
 router.get(App_url.friend_request,  auth, usersControllers.controllers.getFriendRequest);
 router.get(App_url.ReceivedFriendRequests,  auth, usersControllers.controllers.getReceivedFriendRequests);
 router.put(App_url.FriendRequestUpdate,  auth, usersControllers.controllers.updateFriendRequests);
+router.get(App_url.acceptedFriends,  auth, usersControllers.controllers.getAcceptedFriendDetails);
+router.get(App_url.get_details,  auth, usersControllers.controllers.getFriendDetailsById);
 
 module.exports = router;

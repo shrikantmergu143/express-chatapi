@@ -17,5 +17,6 @@ const sendMessageSchema = Joi.object({
     to_id:Joi.string().required(),
 })
 router.post(App_url.send_message,  validator.body(sendMessageSchema), auth, messagesControllers.controllers.sendMessage);
+router.get(App_url.get_message, auth, messagesControllers.controllers.getMessages);
 
 module.exports = router;
