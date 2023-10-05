@@ -18,5 +18,6 @@ const sendMessageSchema = Joi.object({
 })
 router.post(App_url.send_message,  validator.body(sendMessageSchema), auth, messagesControllers.controllers.sendMessage);
 router.get(App_url.get_message, auth, messagesControllers.controllers.getMessages);
+router.get(App_url.friend_chat, auth, messagesControllers.controllers.getFriendChatList);
 
 module.exports = router;
