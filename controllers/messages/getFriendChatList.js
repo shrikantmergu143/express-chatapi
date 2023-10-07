@@ -9,11 +9,11 @@ const getFriendChatList = async (req, res) => {
         if (!userEmail) {
             return res.status(400).json({ error: "User email not provided." });
         }
-
+        const pages = req.query.page || req.body.page;
+        const Limit = req.query.limit || req.body.limit;
         // Parse query parameters for pagination and limit
-        const page = parseInt(req.query.page) || 1; // default to page 1
-        const limit = parseInt(req.query.limit) || 2; // default to 10 records per page
-
+        const page = parseInt(pages) || 1; // default to page 1
+        const limit = parseInt(Limit) || 4; // default to 10 records per page
         const skip = (page - 1) * limit;
 
         const friendships = await FriendRequest.find({
@@ -32,20 +32,20 @@ const getFriendChatList = async (req, res) => {
 
         const friendDetails = await User.find({ email: { $in: friendEmails } });
 
-        const lastMessagePromises = friendships.map(async (friendship) => {
-            const lastMessage = await Message.findOne(
-                {
-                    friend_id: friendship._id.toString() // Convert to string for comparison
-                },
-                {},
-                { sort: { created_at: -1 } }
-            );
+        const lastMessagePromises = friendships.map((friendship) => {
+            // const lastMessage = await Message.findOne(
+            //     {
+            //         friend_id: friendship._id.toString() // Convert to string for comparison
+            //     },
+            //     {},
+            //     { sort: { created_at: -1 } }
+            // );
             const FriendEmail =  friendship.email_to === userEmail ? friendship.email_from : friendship.email_to;
             const details = friendDetails?.find((item)=>item?.email == FriendEmail);
-            return { ...friendship?._doc, friend_id:friendship?._id, lastMessage, details:usersPayload(details) };
+            return { ...friendship?._doc, friend_id:friendship?._id, details:usersPayload(details) };
         });
 
-        const lastMessages = await Promise.all(lastMessagePromises);
+        const lastMessages = lastMessagePromises;
 
         // Assuming total records in the collection
         const totalRecords = await FriendRequest.countDocuments({

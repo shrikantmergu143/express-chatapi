@@ -11,6 +11,8 @@ const registerSchema = Joi.object({
     username:Joi.string().required(),
     password:Joi.string().required(),
     email:Joi.string().email().required(),
+    first_name:Joi.string().required(),
+    last_name:Joi.string().required(),
 })
 
 const loginSchema = Joi.object({

@@ -9,6 +9,7 @@ const friendRequest = new mongoose.Schema({
     status: { type: String, required: true, default:false },
     active: { type: Boolean, required: true, default:true },
     is_deleted: { type: Boolean, required: true, default:false },
+    last_message: { type: Object, required: false, default:null },
 });
 
 module.exports = mongoose.model("friendRequest", friendRequest)

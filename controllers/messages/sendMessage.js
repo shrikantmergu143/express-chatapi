@@ -1,4 +1,6 @@
 const Message = require("../../models/message");
+const friendRequest = require("../../models/friendRequest");
+const messagePayload = require("../messagePayload");
 
 const sendMessage = async (req, res) => {
     try {
@@ -30,9 +32,15 @@ const sendMessage = async (req, res) => {
 
         // Assign from_id from user if available
         if (req.user) payload.from_id = req.user.user_id;
-
-        const savedMessage = await Message.create(payload);
-        return res.status(200).json({ data: savedMessage });
+        const FriendData = await  friendRequest?.findById(payload.friend_id);
+        if(FriendData?.status === "accepted"){
+            const savedMessage = await Message.create(payload);
+            FriendData.last_message = messagePayload(savedMessage);
+            await FriendData.save();
+            return res.status(200).json({ data: savedMessage });
+        }else{
+            return res.status(400).json({ error: "You can`t send message your friend request is not " });
+        }
     } catch (err) {
         console.error("Error:", err);
         return res.status(500).json({ error: "An error occurred. Please try again." });
