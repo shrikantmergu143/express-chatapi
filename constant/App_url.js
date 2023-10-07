@@ -21,8 +21,11 @@ module.exports = {
     message:"/api/message",
     api_message:"/api/message",
     api_friend:"/api/friend",
+    api_group:"/api/group",
     friend_chat:"/chat-list",
     send_message:"/:friend_id/send",
     get_message:"/:friend_id/get_message",
     get_details:"/:friend_id/get_details",
+    AddGroup:"/add-group",
+    GetGroupsList:"/get",
 }
