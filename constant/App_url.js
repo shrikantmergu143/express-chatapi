@@ -28,4 +28,7 @@ module.exports = {
     get_details:"/:friend_id/get_details",
     AddGroup:"/add-group",
     GetGroupsList:"/get",
+    sendGroupMessage:"/:group_id/send",
+    getGroupDetails:"/:group_id/get",
+    getGroupMessage:"/:group_id/get_message",
 }

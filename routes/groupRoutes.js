@@ -13,12 +13,18 @@ const groupValidation = Joi.object({
     description:Joi.string().required(),
     members:Joi.array().required(),
 })
-// router.get(App_url.get_users,  auth, usersControllers.controllers.getUserList);
+const sendMessageSchema = Joi.object({
+    message:Joi.string().required(),
+    chat_type:Joi.string().required(),
+    device_id:Joi.string().required(),
+    message_type:Joi.string().required(),
+    sender_name:Joi.string().required(),
+})
 router.post(App_url.AddGroup,  validator.body(groupValidation), auth, groupControllers.controllers.addGroup);
+router.post(App_url.sendGroupMessage,  validator.body(sendMessageSchema), auth, groupControllers.controllers.sendGroupMessage);
 router.get(App_url.GetGroupsList,  auth, groupControllers.controllers.groupsList);
-// router.get(App_url.ReceivedFriendRequests,  auth, usersControllers.controllers.getReceivedFriendRequests);
-// router.put(App_url.FriendRequestUpdate,  auth, usersControllers.controllers.updateFriendRequests);
-// router.get(App_url.acceptedFriends,  auth, usersControllers.controllers.getAcceptedFriendDetails);
-// router.get(App_url.get_details,  auth, usersControllers.controllers.getFriendDetailsById);
+router.get(App_url.getGroupDetails,  auth, groupControllers.controllers.getGroup);
+router.get(App_url.getGroupMessage,  auth, groupControllers.controllers.getMessage);
+
 
 module.exports = router;
