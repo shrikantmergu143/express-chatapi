@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const DateTime= new Date().toISOString()
 
 const userSchema = new mongoose.Schema({
     user_id:{type:String},

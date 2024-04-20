@@ -60,6 +60,12 @@ const userPayload = (user) =>{
     if(user?.resume){
         payload.resume = user.resume
     }
+    if(user?.is_admin){
+        payload.is_admin = user.is_admin
+    }
+    if(user?.user_type){
+        payload.user_type = user.user_type
+    }
     return payload;
 }
 module.exports = userPayload;

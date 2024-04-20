@@ -3,14 +3,12 @@ const Message = require("../../models/message");
 const getMessages = async (req, res) => {
     try {
         const friendId = req.params.friend_id; // Assuming the friend_id is passed as a parameter
-        const { dateTime } = req.body; // Assuming dateTime is the date and time for pagination
+        const dateTime = req.query.dateTime || req.body.dateTime ; // Assuming dateTime is the date and time for pagination
 
         let updatedAtQuery = {};
-
         // Validate and set optional updated_at query
         if (dateTime) {
             const parsedDateTime = new Date(dateTime);
-            console.log("dateTime", parsedDateTime)
             if (isNaN(parsedDateTime)) {
                 return res.status(400).json({ error: 'Invalid date and time format for dateTime' });
             }
