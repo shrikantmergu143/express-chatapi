@@ -6,6 +6,11 @@
       "use": "@vercel/node"
     }
   ],
+  "functions": {
+    "server.js": {
+      "runtime": "vercel-php@0.5.2"
+    }
+  },
   "routes": [
     {
       "src": "/(.*)",
