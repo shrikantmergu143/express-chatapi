@@ -3,6 +3,8 @@ const newConnectionHandler = require("./socketHandlers/newConnectionHandler");
 const WebSocket = require('ws');
 const https = require('https');
 const fs = require('fs');
+const getUserDetails = require("./controllers/user/getUserDetails");
+const getUser = require("./controllers/auth/getUser");
 
 const connectedSockets = [];
 
@@ -11,10 +13,10 @@ const registerSocketServer = (server) =>{
 
   socketServer.on('connection', (socket, req) => {
     connectedSockets.push(socket);
-    socket.on('message', (req) => {
+    socket.on('message', (req, res) => {
       // Handle received WebSocket messages
-      // const message = JSON.parse(req);
-      // handleChatMessage(message);
+      const message = JSON.parse(req);
+      handleChatMessage(message, req, res);
     });
 
     // Verify client connection token id is valid or not
@@ -38,11 +40,24 @@ const registerSocketServer = (server) =>{
   });
 };
 
-function handleChatMessage(message) {
-  connectedSockets.forEach((socket) => {
+async function handleChatMessage(message, req, res) {
+  connectedSockets.forEach(async (socket) => {
+    const messages = {
+      ...message,
+    };
+    if(message?.url === "get_user_details" && message?.request?.user_id){
+
+      req.user = {
+        user_id: message?.request?.user_id
+      }
+      const response = await getUserDetails(message?.request?.user_id, res);
+      messages.data = response;
+      return socket.send(JSON.stringify(messages));
+    }
     const response = {
       type: 'chat',
       text: 'Your message was received and processed.',
+      connectedSockets: connectedSockets
     };
     socket.send(JSON.stringify(response));
   });
