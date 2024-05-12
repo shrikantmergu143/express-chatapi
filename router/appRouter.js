@@ -6,6 +6,7 @@ const messageRoutes = require("./../routes/messageRoutes");
 const groupRoutes = require("./../routes/groupRoutes");
 const fs = require('fs');
 const App_url = require("../constant/App_url");
+const puppeteer = require('puppeteer');
 
 function fileExists(filePath) {
     try {
@@ -30,5 +31,28 @@ const appRouter = (app)=>{
           res.send("404 page not found");
         }
     });
+    app.post("/api/pdf",  async (req, res) => {
+      const { url } = req.query;
+      
+      if (!url) {
+          return res.status(400).send('Please provide a URL parameter');
+      }
+  
+      try {
+          const browser = await puppeteer.launch();
+          const page = await browser.newPage();
+          await page.goto(url, { waitUntil: 'networkidle0' });
+          
+          const pdfBuffer = await page.pdf({ format: 'A4' });
+          
+          await browser.close();
+  
+          res.contentType("application/pdf");
+          res.send(pdfBuffer);
+      } catch (error) {
+          console.error('Error converting to PDF:', error);
+          res.status(500).send('An error occurred while converting to PDF');
+      }
+  });
 }
 module.exports = appRouter;
