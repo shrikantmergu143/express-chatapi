@@ -1,10 +1,6 @@
-const cloudinary = require('cloudinary').v2;
 const express = require("express");
 const http = require("http");
 const cors = require("cors");
-// const { MongoClient, ServerApiVersion } = require('mongodb');
-const authRoutes = require("./routes/authRoutes");
-const userRoutes = require("./routes/userRoutes");
 const mongoose = require('mongoose');
 const socketServer = require('./socketServer')
 require('dotenv').config();
@@ -14,19 +10,9 @@ const appRouter = require("./router/appRouter")
 // Serve static files
 app.use(express.static(__dirname + '/public'));
 
-cloudinary.config({ 
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.CLOUD_API_KEY,
-  api_secret: process.env.CLOUD_API_SECRETE,
-});
-
 const PORT = process.env.PORT || process.env.API_PORT;
 const HOSTNAME = '0.0.0.0'
-// app.use(fileUpload());
-app.use(fileUpload({
-  useTempFiles: true,
-  tempFileDir: '/tmp/'
-}));
+app.use(fileUpload());
 app.use(express.json());
 const corsOptions = {
   methods: ['GET', 'POST', 'PUT'],
