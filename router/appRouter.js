@@ -7,7 +7,8 @@ const groupRoutes = require("./../routes/groupRoutes");
 const fs = require('fs');
 const App_url = require("../constant/App_url");
 const puppeteer = require('puppeteer');
-const cloudinary = require('cloudinary').v2;
+const StorageBucket = require("./../models/storageBucket");
+const uuid = require("uuid");
 
 function fileExists(filePath) {
     try {
@@ -55,26 +56,42 @@ const appRouter = (app)=>{
           res.status(500).send('An error occurred while converting to PDF');
       }
     });
-    app.post('/upload-file', async (req, res) => {
+    app.post('/api/upload-file', async (req, res) => {
       try {
-        if (!req.files || Object.keys(req.files).length === 0) {
-          return res.status(400).send('No files were uploaded.');
-        }
-    
-        const file = req.files.file;
-    
-        // Upload file to Cloudinary
-        cloudinary.uploader.upload(file.tempFilePath, { folder: "uploads" }, (error, result) => {
-          if (error) {
-            console.error(error);
-            return res.status(500).send(error);
-          }
-          res.json({ url: result.secure_url });
+        const id = uuid.v4();
+
+        const result = req.body;
+
+        const newFile = new StorageBucket({
+          file_id: id,
+          bucket_id: id,
+          asset_id: result.asset_id,
+          public_id: result.public_id,
+          version: result.version,
+          version_id: result.version_id,
+          signature: result.signature,
+          width: result.width,
+          height: result.height,
+          format: result.format,
+          resource_type: result.resource_type,
+          created_at: result.created_at,
+          tags: result.tags,
+          bytes: result.bytes,
+          type: result.type,
+          etag: result.etag,
+          placeholder: result.placeholder,
+          url: result.url,
+          secure_url: result.secure_url,
+          folder: result.folder,
+          original_filename: result.original_filename,
+          created_at: new Date(),
+          updated_at: new Date(),
         });
     
+        await newFile.save();
+        res.status(200).json(newFile);
       } catch (error) {
-        console.error(error);
-        res.status(500).send(error.message);
+        res.status(500).json({ error: error.message });
       }
     });
 }
