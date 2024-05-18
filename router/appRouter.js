@@ -7,6 +7,7 @@ const groupRoutes = require("./../routes/groupRoutes");
 const fs = require('fs');
 const App_url = require("../constant/App_url");
 const puppeteer = require('puppeteer');
+const cloudinary = require('cloudinary').v2;
 
 function fileExists(filePath) {
     try {
@@ -53,6 +54,28 @@ const appRouter = (app)=>{
           console.error('Error converting to PDF:', error);
           res.status(500).send('An error occurred while converting to PDF');
       }
-  });
+    });
+    app.post('/upload-file', async (req, res) => {
+      try {
+        if (!req.files || Object.keys(req.files).length === 0) {
+          return res.status(400).send('No files were uploaded.');
+        }
+    
+        const file = req.files.file;
+    
+        // Upload file to Cloudinary
+        cloudinary.uploader.upload(file.tempFilePath, { folder: "uploads" }, (error, result) => {
+          if (error) {
+            console.error(error);
+            return res.status(500).send(error);
+          }
+          res.json({ url: result.secure_url });
+        });
+    
+      } catch (error) {
+        console.error(error);
+        res.status(500).send(error.message);
+      }
+    });
 }
 module.exports = appRouter;
