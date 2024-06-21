@@ -51,15 +51,18 @@ async function handleChatMessage(message, req, res) {
         user_id: message?.request?.user_id
       }
       const response = await getUserDetails(message?.request?.user_id, res);
-      messages.data = response;
+      messages.response = response;
       return socket.send(JSON.stringify(messages));
+    }else{
+      const response = {
+        type: 'chat',
+        text: 'Your message was received and processed.',
+        url: message?.url,
+        // connectedSockets: connectedSockets
+      };
+      socket.send(JSON.stringify(response));
     }
-    const response = {
-      type: 'chat',
-      text: 'Your message was received and processed.',
-      connectedSockets: connectedSockets
-    };
-    socket.send(JSON.stringify(response));
+
   });
 }
 
