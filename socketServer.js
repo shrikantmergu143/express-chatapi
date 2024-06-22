@@ -1,23 +1,17 @@
 const authSocket = require("./middleware/authSocket");
 const newConnectionHandler = require("./socketHandlers/newConnectionHandler");
 const WebSocket = require('ws');
-const https = require('https');
-const fs = require('fs');
 const getUserDetails = require("./controllers/user/getUserDetails");
-const getUser = require("./controllers/auth/getUser");
+const usersControllers = require("./controllers/users/usersControllers");
+const serverStore = require("./serverStore");
 
 const connectedSockets = [];
 
-const registerSocketServer = (server) =>{
+const registerSocketServer = (server) => {
   const socketServer = new WebSocket.Server({ server });
 
   socketServer.on('connection', (socket, req) => {
     connectedSockets.push(socket);
-    socket.on('message', (req, res) => {
-      // Handle received WebSocket messages
-      const message = JSON.parse(req);
-      handleChatMessage(message, req, res);
-    });
 
     // Verify client connection token id is valid or not
     const response = authSocket.validateToken(socket, req);
@@ -30,6 +24,12 @@ const registerSocketServer = (server) =>{
       socket.close();
     }
 
+    socket.on('message', async (message) => {
+      // Handle received WebSocket messages
+      const parsedMessage = JSON.parse(message);
+      await handleChatMessage(parsedMessage, req, socket);
+    });
+
     socket.on('close', () => {
       // Remove the disconnected socket from the list
       const index = connectedSockets.indexOf(socket);
@@ -40,30 +40,47 @@ const registerSocketServer = (server) =>{
   });
 };
 
-async function handleChatMessage(message, req, res) {
-  connectedSockets.forEach(async (socket) => {
-    const messages = {
+async function handleChatMessage(message, req, socketSent) {
+  const messages = {
       ...message,
-    };
-    if(message?.url === "get_user_details" && message?.request?.user_id){
+      connectUsers: serverStore.getAllConnectedUsers()
+  };
 
-      req.user = {
-        user_id: message?.request?.user_id
-      }
-      const response = await getUserDetails(message?.request?.user_id, res);
-      messages.response = response;
+  switch (message?.url) {
+      case "get_user_details":
+          if (message?.request?.user_id) {
+              const response = await getUserDetails(message.request.user_id);
+              messages.response = response;
+          }
+          break;
+      case "send_friend_request":
+        if (message?.request?.email_to) {
+            const response = await usersControllers.controllers.setFriendRequest(message?.request, req);
+            messages.response = response;
+        }
+        break;
+      // Add more cases here for different request types
+      default:
+          console.log("Unknown request type");
+          break;
+  }
+
+  // if (message?.broadcast) {
+  //     const allSockets = Array.from(serverStore.connectUsers.keys());
+  //     allSockets.forEach(async (socketId) => {
+  //         const socket = serverStore.connectUsers.get(socketId);
+  //         socket.send(JSON.stringify(messages));
+  //     });
+  // } else {
+  //     socketSent.send(JSON.stringify(messages));
+  // }
+  if (message?.broadcast) {
+    connectedSockets.forEach(async (socket) => {
       return socket.send(JSON.stringify(messages));
-    }else{
-      const response = {
-        type: 'chat',
-        text: 'Your message was received and processed.',
-        url: message?.url,
-        // connectedSockets: connectedSockets
-      };
-      socket.send(JSON.stringify(response));
-    }
-
-  });
+    });
+  }else{
+    socketSent.send(JSON.stringify(messages));
+  }
 }
 
 module.exports = {

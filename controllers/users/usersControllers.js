@@ -1,5 +1,5 @@
 const getUserList = require("./getUserList");
-const sendFriendRequest = require("./sendFriendRequest");
+const friendRequest = require("./sendFriendRequest");
 const getFriendRequest = require("./getFriendRequest");
 const getReceivedFriendRequests = require("./getReceivedFriendRequests");
 const updateFriendRequests = require("./updateFriendRequests");
@@ -9,7 +9,8 @@ const getFriendDetailsById = require("./getFriendDetailsById");
 
 exports.controllers = {
     getUserList,
-    sendFriendRequest,
+    sendFriendRequest: friendRequest?.sendFriendRequest,
+    setFriendRequest: friendRequest?.setFriendRequest,
     getFriendRequest,
     getReceivedFriendRequests,
     updateFriendRequests,
