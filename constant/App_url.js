@@ -22,6 +22,7 @@ module.exports = {
     api_message:"/api/message",
     api_friend:"/api/friend",
     api_group:"/api/group",
+    api_channel:"/api/channel",
     friend_chat:"/chat-list",
     send_message:"/:friend_id/send",
     get_message:"/:friend_id/get_message",
@@ -31,4 +32,6 @@ module.exports = {
     sendGroupMessage:"/:group_id/send",
     getGroupDetails:"/:group_id/get",
     getGroupMessage:"/:group_id/get_message",
+    addChannels:"/add",
+    getChannels:"/get",
 }

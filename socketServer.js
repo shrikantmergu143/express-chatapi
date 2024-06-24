@@ -3,6 +3,7 @@ const newConnectionHandler = require("./socketHandlers/newConnectionHandler");
 const WebSocket = require('ws');
 const getUserDetails = require("./controllers/user/getUserDetails");
 const usersControllers = require("./controllers/users/usersControllers");
+const ChannelController = require("./controllers/channels/ChannelController");
 const serverStore = require("./serverStore");
 
 const connectedSockets = [];
@@ -43,26 +44,56 @@ const registerSocketServer = (server) => {
 async function handleChatMessage(message, req, socketSent) {
   const messages = {
       ...message,
-      connectUsers: serverStore.getAllConnectedUsers()
+      // connectUsers: serverStore.getAllConnectedUsers()
   };
 
+  if(req?.user){
+    if(!messages.request){
+      messages.request = {}
+    }
+    messages.request.user = req?.user;
+  }
+
   switch (message?.url) {
-      case "get_user_details":
-          if (message?.request?.user_id) {
-              const response = await getUserDetails(message.request.user_id);
-              messages.response = response;
-          }
-          break;
-      case "send_friend_request":
-        if (message?.request?.email_to) {
-            const response = await usersControllers.controllers.setFriendRequest(message?.request, req);
-            messages.response = response;
+    case "get_user_details":{
+      if (message?.request?.user_id) {
+        const response = await getUserDetails(message.request.user_id);
+        messages.response = response;
+      }
+      break;
+    }
+    case "send_friend_request":{
+      if (message?.request?.email_to) {
+        const response = await usersControllers.controllers.setFriendRequest(message?.request, req);
+        messages.response = response;
+      }
+      break;
+    }
+    case "add_channels":{
+      if (message?.request?.channel_name) {
+        const payload = {
+          body: message?.request,
+          user: req?.user,
         }
-        break;
-      // Add more cases here for different request types
-      default:
-          console.log("Unknown request type");
-          break;
+        const response = await ChannelController.controllers.AddChannelsController(payload, req);
+        messages.response = response;
+      }
+      break;
+    }
+    case "get_channels":{
+      // if (message?.request?.channel_name) {
+        const payload = {
+          ...message?.request,
+          user: req?.user,
+        }
+        const response = await ChannelController.controllers.GetChannelsController(payload, req);
+        messages.response = response;
+      // }
+      break;
+    }
+    default:
+      console.log("Unknown request type");
+      break;
   }
 
   // if (message?.broadcast) {
@@ -74,6 +105,9 @@ async function handleChatMessage(message, req, socketSent) {
   // } else {
   //     socketSent.send(JSON.stringify(messages));
   // }
+  if(messages.request.user){
+    delete messages.request.user;
+  }
   if (message?.broadcast) {
     connectedSockets.forEach(async (socket) => {
       return socket.send(JSON.stringify(messages));
