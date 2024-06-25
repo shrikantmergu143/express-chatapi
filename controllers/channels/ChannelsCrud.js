@@ -16,17 +16,27 @@ const AddChannelsController = async (req, res) =>{
       return { status: 400, message: 'Failed to create channel.', error: error };
     }
 }
-const GetChannelsController = async (req, res) =>{
+const GetChannelsController = async (req, res) => {
     const { page = 1, limit = 20, search = "" } = req;
     try {
-        const channels = await Channels.find({ created_by: req?.user?.user_id })
-        .sort({ updated_at: 1 })
-        .skip((page - 1) * limit)
-        .limit(parseInt(limit));
-        if (!channels || channels.length === 0) {
-            return  { status: 400, message: 'No channels found' };
+        const matchStage = { created_by: req?.user?.user_id };
+
+        if (search) {
+            matchStage.channel_name = { $regex: search, $options: "i" }; // Assuming you are searching by channel name
         }
-        const total_records = await Channels.countDocuments({ created_by: req?.user?.user_id });
+
+        const channels = await Channels.aggregate([
+            { $match: matchStage },
+            { $sort: { updated_at: 1 } },
+            { $skip: (page - 1) * limit },
+            { $limit: parseInt(limit) }
+        ]);
+
+        if (!channels || channels.length === 0) {
+            return { status: 400, message: 'No channels found' };
+        }
+
+        const total_records = await Channels.countDocuments(matchStage);
 
         const pagination = {
             total_records,
@@ -34,11 +44,13 @@ const GetChannelsController = async (req, res) =>{
             page: parseInt(page),
             total_pages: Math.ceil(total_records / limit),
         };
-        return { status: 200, data: { data: channels, pagination }};
+
+        return { status: 200, data: { data: channels, pagination } };
     } catch (error) {
-      return { status: 400, message: 'No channels found' };
+        return { status: 400, message: 'No channels found' };
     }
 }
+
 const AddChannels = async (req, res) =>{
     const response = await AddChannelsController(req, res);
     res.status(response?.status).json(response);

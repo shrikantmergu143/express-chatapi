@@ -2,7 +2,7 @@ const getUserList = require("./getUserList");
 const friendRequest = require("./sendFriendRequest");
 const getFriendRequest = require("./getFriendRequest");
 const getReceivedFriendRequests = require("./getReceivedFriendRequests");
-const updateFriendRequests = require("./updateFriendRequests");
+const updateFriend = require("./updateFriendRequests");
 const getAcceptedFriendDetails = require("./getAcceptedFriendDetails");
 const getFriendDetailsById = require("./getFriendDetailsById");
 
@@ -13,7 +13,11 @@ exports.controllers = {
     setFriendRequest: friendRequest?.setFriendRequest,
     getFriendRequest,
     getReceivedFriendRequests,
-    updateFriendRequests,
+    updateFriendRequests: updateFriend?.updateFriendRequests,
+    getFriendAcceptDetails: updateFriend?.getFriendAcceptDetails,
+    getFriendRequestList: updateFriend?.getFriendRequest,
+    setStoreFriendRequest: updateFriend?.setFriendRequest,
+    getFriendListAccepted: updateFriend?.getFriendListAccepted,
     getAcceptedFriendDetails,
     getFriendDetailsById,
 }

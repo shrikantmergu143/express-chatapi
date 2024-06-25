@@ -4,6 +4,7 @@ const WebSocket = require('ws');
 const getUserDetails = require("./controllers/user/getUserDetails");
 const usersControllers = require("./controllers/users/usersControllers");
 const ChannelController = require("./controllers/channels/ChannelController");
+// const ChannelController = require("./controllers/users/usersControllers");
 const serverStore = require("./serverStore");
 
 const connectedSockets = [];
@@ -55,21 +56,21 @@ async function handleChatMessage(message, req, socketSent) {
   }
 
   switch (message?.url) {
-    case "get_user_details":{
+    case "get_user_details" : {
       if (message?.request?.user_id) {
         const response = await getUserDetails(message.request.user_id);
         messages.response = response;
       }
       break;
     }
-    case "send_friend_request":{
+    case "send_friend_request" : {
       if (message?.request?.email_to) {
         const response = await usersControllers.controllers.setFriendRequest(message?.request, req);
         messages.response = response;
       }
       break;
     }
-    case "add_channels":{
+    case "add_channels" : {
       if (message?.request?.channel_name) {
         const payload = {
           body: message?.request,
@@ -80,15 +81,40 @@ async function handleChatMessage(message, req, socketSent) {
       }
       break;
     }
-    case "get_channels":{
-      // if (message?.request?.channel_name) {
+    case "get_channels" : {
         const payload = {
           ...message?.request,
           user: req?.user,
         }
         const response = await ChannelController.controllers.GetChannelsController(payload, req);
         messages.response = response;
-      // }
+      break;
+    }
+    case "update_friend_request" : {
+      const payload = {
+        ...message?.request,
+        user: req?.user,
+      }
+      const response = await usersControllers.controllers.setStoreFriendRequest(payload, req);
+      messages.response = response;
+      break;
+    }
+    case "get_friend_request" : {
+      const payload = {
+        ...message?.request,
+        user: req?.user,
+      }
+      const response = await usersControllers.controllers.getFriendRequestList(payload, req);
+      messages.response = response;
+      break;
+    }
+    case "get_friend_accepted" : {
+      const payload = {
+        ...message?.request,
+        user: req?.user,
+      }
+      const response = await usersControllers.controllers.getFriendListAccepted(payload, req);
+      messages.response = response;
       break;
     }
     default:
