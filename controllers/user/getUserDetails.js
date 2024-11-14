@@ -8,7 +8,7 @@ const getUserDetails = async (user_id)=>{
             const payload = userPayload(user);
             return payload;
         }
-        return {error:"Token expired"};
+        return {error:"User not found"};
 
     }catch(err){
         return {error:"Error occured, Please try again"}
